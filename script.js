@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 // 🔴 STEP 1: Apna deployed GAS URL yahan daalo
-const GAS_URL = 'YOUR_GAS_DEPLOYED_URL_HERE';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwSZHXISRO_TZ0Qo2yI6Kab2XZ7DO8Wi5BnNZp955BvWpgXq5k9T8w1yfN8k_aO_75AUA/exec';
 
 // ═══════════════════════════════════════════════════════════
 // STATE

@@ -4,8 +4,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Litpax — Quotation Maker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -13,231 +12,215 @@
 <div id="toast" class="toast"></div>
 
 <!-- LOADER -->
-<div id="loader" class="loader-wrap">
-  <div class="loader-inner">
-    <div class="loader-bolt">⚡</div>
+<div id="loader" class="loader-screen">
+  <div class="loader-box">
+    <div class="loader-icon">⚡</div>
     <div class="loader-ring"></div>
     <p>Loading Litpax data...</p>
   </div>
 </div>
 
-<!-- APP -->
-<div id="app" class="app" style="display:none">
+<!-- APP SHELL -->
+<div id="app" style="display:none">
 
-  <!-- TOP NAV -->
-  <nav class="navbar no-print">
-    <div class="navbar-left">
-      <div class="nav-logo">
-        <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-          <rect x="3" y="1" width="14" height="18" rx="2" fill="#fbbf24"/>
-          <rect x="7" y="0" width="6" height="3" rx="1" fill="#fbbf24"/>
-          <path d="M10 5L7 11H10.5L8.5 15.5L13.5 9H10L10 5Z" fill="#1e1b4b"/>
-        </svg>
-      </div>
-      <span class="nav-brand">Litpax Technology</span>
-      <span class="nav-divider">/</span>
-      <span class="nav-page">Quotation Maker</span>
+  <!-- NAV (screen only) -->
+  <nav class="topnav no-print">
+    <div class="topnav-l">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="3" y="1" width="14" height="18" rx="2" fill="#fbbf24"/>
+        <rect x="7" y="0" width="6" height="3" rx="1" fill="#fbbf24"/>
+        <path d="M10 5L7 11H10.5L8.5 15.5L13.5 9H10Z" fill="#1e1b4b"/>
+      </svg>
+      <span class="topnav-brand">Litpax Technology</span>
+      <span class="topnav-sep">/</span>
+      <span class="topnav-mod">Quotation Maker</span>
     </div>
-    <div class="navbar-right">
-      <span id="navDate" class="nav-date"></span>
-      <div id="navStatus" class="nav-status">
-        <span class="status-dot"></span>
-        <span id="navStatusLabel">Loading</span>
+    <div class="topnav-r">
+      <span id="navDate"></span>
+      <div id="navStatus" class="nav-pill">
+        <span class="pill-dot"></span>
+        <span id="navLbl">Loading</span>
       </div>
     </div>
   </nav>
 
   <!-- DEMO BANNER -->
-  <div id="demoBanner" class="demo-banner no-print" style="display:none">
-    ⚠ Demo mode active — <code>script.js</code> line 3 pe GAS URL daalo for live data.
+  <div id="demoBanner" class="demo-strip no-print" style="display:none">
+    ⚠ Demo mode — <code>script.js</code> line 3 pe GAS URL daalo
   </div>
 
-  <div class="workspace">
-    <div class="quote-doc" id="quoteDoc">
+  <!-- PAGE -->
+  <div class="page-wrap">
 
-      <!-- ══════════════════════════
-           COMPANY HEADER
-      ══════════════════════════ -->
-      <div class="doc-company-header">
-        <div class="dch-left">
-          <div class="dch-logo">
-            <svg width="36" height="36" viewBox="0 0 20 20" fill="none">
-              <rect x="3" y="1" width="14" height="18" rx="2" fill="#fbbf24"/>
-              <rect x="7" y="0" width="6" height="3" rx="1" fill="#fbbf24"/>
-              <path d="M10 5L7 11H10.5L8.5 15.5L13.5 9H10L10 5Z" fill="#1e1b4b"/>
-            </svg>
-          </div>
-          <div class="dch-info">
-            <h1 id="docCompanyName" class="dch-name">Litpax Technology Pvt. Ltd.</h1>
-            <p id="docCompanyAddr" class="dch-addr">Loading...</p>
-          </div>
+    <!-- SETTINGS SIDEBAR (screen only) -->
+    <aside class="sidebar no-print">
+      <div class="sb-section">
+        <p class="sb-head">Quote Settings</p>
+        <div class="field">
+          <label class="flabel">GST Rate</label>
+          <select class="finput" id="gstSelect" onchange="recalcTotals()">
+            <option value="0">0% — No GST</option>
+            <option value="5">5%</option>
+            <option value="12">12%</option>
+            <option value="18" selected>18%</option>
+            <option value="28">28%</option>
+          </select>
         </div>
-        <div class="dch-right">
-          <div class="dch-doc-label">QUOTATION</div>
-          <table class="dch-meta">
-            <tr><td class="meta-key">Quotation No</td><td class="meta-val" id="docQNo">Auto-generate</td></tr>
-            <tr><td class="meta-key">Date</td><td class="meta-val" id="docDate">—</td></tr>
-            <tr><td class="meta-key">Valid Till</td><td class="meta-val" id="docValidTill">—</td></tr>
-          </table>
-        </div>
-      </div>
-      <div class="doc-header-rule"></div>
-
-      <!-- ══════════════════════════
-           BILL TO + SETTINGS
-      ══════════════════════════ -->
-      <div class="doc-bill-section">
-        <div class="doc-bill-block">
-          <p class="bill-label">Bill To</p>
-          <div class="form-row-2">
-            <div class="field">
-              <label class="flabel">Customer / Company Name <span class="req">*</span></label>
-              <input class="finput" type="text" id="custName" placeholder="ABC Enterprises Pvt. Ltd."/>
-            </div>
-            <div class="field">
-              <label class="flabel">Phone</label>
-              <input class="finput" type="tel" id="custPhone" placeholder="+91 98765 43210"/>
-            </div>
-          </div>
-          <div class="form-row-3">
-            <div class="field">
-              <label class="flabel">Email</label>
-              <input class="finput" type="email" id="custEmail" placeholder="buyer@company.com"/>
-            </div>
-            <div class="field">
-              <label class="flabel">GST Number</label>
-              <input class="finput mono" type="text" id="custGST" placeholder="22XXXXX1234X1ZX"/>
-            </div>
-            <div class="field">
-              <label class="flabel">City / Address</label>
-              <input class="finput" type="text" id="custAddress" placeholder="City, State"/>
-            </div>
-          </div>
-        </div>
-
-        <div class="doc-settings-block no-print">
-          <p class="bill-label">Quote Settings</p>
-          <div class="field" style="margin-bottom:10px">
-            <label class="flabel">GST Rate</label>
-            <select class="finput" id="gstSelect" onchange="recalcTotals()">
-              <option value="0">0% — No GST</option>
-              <option value="5">5%</option>
-              <option value="12">12%</option>
-              <option value="18" selected>18% — Standard</option>
-              <option value="28">28%</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="flabel">Validity</label>
-            <div class="input-with-unit">
-              <input class="finput" type="number" id="validityDays" value="30" min="1" max="365" oninput="updateValidTill()"/>
-              <span class="input-unit">days</span>
-            </div>
+        <div class="field mt10">
+          <label class="flabel">Valid For</label>
+          <div class="unit-row">
+            <input class="finput" type="number" id="validityDays" value="30" min="1" oninput="updateValidTill()"/>
+            <span class="unit-lbl">days</span>
           </div>
         </div>
       </div>
 
-      <div class="doc-section-divider"></div>
+      <div class="sb-section">
+        <p class="sb-head">Actions</p>
+        <button class="sb-btn sb-btn-primary" onclick="saveQuotation()" id="saveBtn">💾 Save Quotation</button>
+        <button class="sb-btn sb-btn-secondary mt8" onclick="previewPrint()">🖨 Print / PDF</button>
+        <button class="sb-btn sb-btn-ghost mt8" onclick="resetForm()">↺ Reset Form</button>
+      </div>
 
-      <!-- ══════════════════════════
-           ITEMS TABLE
-      ══════════════════════════ -->
-      <div class="doc-items-section">
+      <div class="sb-section sb-totals-preview">
+        <p class="sb-head">Summary</p>
+        <div class="sb-total-row"><span>Subtotal</span><span id="sbSubtotal">₹0.00</span></div>
+        <div class="sb-total-row"><span id="sbGstLabel">GST (18%)</span><span id="sbGst">₹0.00</span></div>
+        <div class="sb-total-row sb-grand"><span>Total</span><span id="sbGrand">₹0.00</span></div>
+      </div>
+    </aside>
 
-        <!-- Screen toolbar -->
-        <div class="items-toolbar no-print">
-          <span class="items-title">Battery Items</span>
-          <button class="btn-add" onclick="addItem()">+ Add Item</button>
-        </div>
+    <!-- QUOTATION DOCUMENT -->
+    <div class="doc-wrap">
+      <div class="doc" id="quoteDoc">
 
-        <!-- Screen table header -->
-        <div class="items-head no-print">
-          <div class="ih">Category</div>
-          <div class="ih">Model</div>
-          <div class="ih">Capacity</div>
-          <div class="ih">Voltage</div>
-          <div class="ih">Rate Mode</div>
-          <div class="ih">Qty</div>
-          <div class="ih">Rate (₹)</div>
-          <div class="ih right">Amount</div>
-          <div class="ih"></div>
-        </div>
-
-        <!-- Screen item rows -->
-        <div id="itemsList" class="items-body"></div>
-
-        <!-- Empty state -->
-        <div id="emptyState" class="empty-state no-print" style="display:none">
-          No items — <button class="btn-link" onclick="addItem()">add first item</button>
-        </div>
-
-        <!-- Print table header -->
-        <div class="print-items-head">
-          <div>#</div>
-          <div>Category / Model</div>
-          <div>Capacity</div>
-          <div>Voltage</div>
-          <div>Qty</div>
-          <div>Rate (₹)</div>
-          <div>Amount (₹)</div>
-        </div>
-
-        <!-- Print rows -->
-        <div id="printItemsList" class="print-items-body"></div>
-
-        <!-- Totals -->
-        <div class="items-totals">
-          <div class="totals-notes no-print">
-            <label class="flabel">Terms & Conditions / Notes</label>
-            <textarea class="finput" id="notes" rows="5"
-              placeholder="• Payment: 50% advance, 50% before dispatch&#10;• Delivery: 15–20 working days&#10;• Warranty: 2 years manufacturing defects&#10;• Transport: Extra at actuals"></textarea>
-          </div>
-          <div class="totals-card">
-            <div class="total-line">
-              <span>Subtotal</span>
-              <span id="subtotalVal" class="mono">₹0.00</span>
+        <!-- ══ HEADER BAND ══ -->
+        <div class="doc-header">
+          <div class="dh-left">
+            <div class="dh-logo-wrap">
+              <svg width="36" height="36" viewBox="0 0 20 20" fill="none">
+                <rect x="3" y="1" width="14" height="18" rx="2" fill="#fbbf24"/>
+                <rect x="7" y="0" width="6" height="3" rx="1" fill="#fbbf24"/>
+                <path d="M10 5L7 11H10.5L8.5 15.5L13.5 9H10Z" fill="#1e1b4b"/>
+              </svg>
             </div>
-            <div class="total-line">
-              <span>GST <span id="gstPctLabel" class="gst-tag">18%</span></span>
-              <span id="gstVal" class="mono">₹0.00</span>
-            </div>
-            <div class="total-line total-grand">
-              <span>Grand Total</span>
-              <span id="grandTotalVal" class="mono grand-num">₹0.00</span>
-            </div>
-            <div class="total-line print-only">
-              <span class="words-label">Amount in Words</span>
-              <span id="amountWords" class="words-val">Zero Rupees Only</span>
+            <div>
+              <div id="hCompanyName" class="dh-company">Litpax Technology Pvt. Ltd.</div>
+              <div id="hCompanyContact" class="dh-contact"></div>
             </div>
           </div>
+          <div class="dh-right">
+            <div id="hPhone" class="dh-detail"><span class="dh-icon">📞</span><span id="hPhoneVal"></span></div>
+            <div id="hEmail" class="dh-detail"><span class="dh-icon">✉</span><span id="hEmailVal"></span></div>
+            <div id="hAddress" class="dh-detail"><span class="dh-icon">📍</span><span id="hAddressVal"></span></div>
+          </div>
         </div>
-      </div>
+        <div class="doc-header-accent"></div>
 
-      <!-- PRINT FOOTER -->
-      <div class="print-footer">
-        <div class="pf-terms" id="printTerms"></div>
-        <div class="pf-sig">
-          <div class="sig-space"></div>
-          <p class="sig-name">Authorised Signatory</p>
-          <p id="sigCompany" class="sig-company"></p>
+        <!-- ══ QUOTATION TITLE ROW ══ -->
+        <div class="doc-title-row">
+          <div class="dt-left">
+            <p class="dt-to-label">Quotation To</p>
+            <!-- CUSTOMER FIELDS (editable on screen, static on print) -->
+            <input class="finput cust-name-input" type="text" id="custName" placeholder="Customer / Company Name *"/>
+            <div class="cust-sub-fields">
+              <input class="finput cust-sub" type="tel"   id="custPhone"   placeholder="Ph: +91 XXXXX XXXXX"/>
+              <input class="finput cust-sub" type="email" id="custEmail"   placeholder="Email"/>
+              <input class="finput cust-sub" type="text"  id="custAddress" placeholder="Address, City"/>
+              <input class="finput cust-sub mono" type="text" id="custGST" placeholder="GST: 22XXXXX1234X1ZX"/>
+            </div>
+          </div>
+
+          <div class="dt-center">
+            <div class="dt-heading">QUOTATION</div>
+          </div>
+
+          <div class="dt-right">
+            <table class="dt-meta">
+              <tr><td class="dm-key">Quotation No</td><td class="dm-val" id="docQNo">Auto</td></tr>
+              <tr><td class="dm-key">Date</td><td class="dm-val" id="docDate">—</td></tr>
+              <tr><td class="dm-key">Valid Till</td><td class="dm-val" id="docValidTill">—</td></tr>
+            </table>
+          </div>
         </div>
-      </div>
-      <div class="print-bank-row print-only">
-        <strong>Bank Details:</strong> <span id="printBankDetails"></span>
-      </div>
 
-    </div><!-- /quote-doc -->
+        <!-- ══ ITEMS TABLE ══ -->
+        <div class="doc-items">
 
-    <!-- ACTION BAR -->
-    <div class="action-bar no-print">
-      <button class="btn-ghost" onclick="resetForm()">Reset</button>
-      <div class="action-bar-r">
-        <button class="btn-outline" onclick="previewPrint()">🖨 Preview & Print</button>
-        <button class="btn-primary" id="saveBtn" onclick="saveQuotation()">💾 Save Quotation</button>
-      </div>
-    </div>
+          <!-- Screen header -->
+          <div class="items-hdr no-print">
+            <div class="ih-desc">Product Description</div>
+            <div class="ih-cap">Capacity</div>
+            <div class="ih-volt">Voltage</div>
+            <div class="ih-mode">Rate Mode</div>
+            <div class="ih-qty">QTY</div>
+            <div class="ih-rate">Rate (₹)</div>
+            <div class="ih-total">Total</div>
+            <div class="ih-del"></div>
+          </div>
 
-  </div><!-- /workspace -->
+          <!-- Print header -->
+          <div class="print-hdr">
+            <div class="ph-desc">Product Description</div>
+            <div class="ph-cap">Capacity</div>
+            <div class="ph-volt">Voltage</div>
+            <div class="ph-qty">QTY</div>
+            <div class="ph-rate">Rate (₹)</div>
+            <div class="ph-total">Total (₹)</div>
+          </div>
+
+          <!-- Rows -->
+          <div id="itemsList" class="items-list"></div>
+          <div id="printList" class="print-list"></div>
+
+          <!-- Empty -->
+          <div id="emptyState" class="empty-st no-print" style="display:none">
+            No items yet — <button class="btn-link" onclick="addItem()">add first item</button>
+          </div>
+
+          <!-- Add button -->
+          <button class="btn-add-row no-print" onclick="addItem()">+ Add Item</button>
+
+          <!-- Totals block -->
+          <div class="totals-block">
+            <div class="totals-left no-print">
+              <label class="flabel">Terms & Conditions</label>
+              <textarea class="finput" id="notes" rows="5"
+                placeholder="• Payment: 50% advance, 50% before dispatch&#10;• Delivery: 15–20 working days&#10;• Warranty: 2 years on manufacturing defects"></textarea>
+            </div>
+            <div class="totals-right">
+              <div class="tr-row"><span>Subtotal</span><span id="subtotalVal">₹0.00</span></div>
+              <div class="tr-row"><span>GST <em id="gstPctLbl">(18%)</em></span><span id="gstVal">₹0.00</span></div>
+              <div class="tr-grand">
+                <div class="trg-inner">
+                  <span>GRAND TOTAL</span>
+                  <span id="grandTotalVal">₹0.00</span>
+                </div>
+              </div>
+              <div class="tr-words print-only" id="amountWords">Zero Rupees Only</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ FOOTER ══ -->
+        <div class="doc-footer">
+          <div class="df-left">
+            <div class="df-thanks">THANK YOU</div>
+            <div class="df-sub">FOR YOUR BUSINESS</div>
+            <div class="df-terms print-only" id="printTerms"></div>
+            <div class="df-bank print-only" id="printBank"></div>
+          </div>
+          <div class="df-right">
+            <div class="df-sig-space"></div>
+            <div class="df-sig-name" id="sigName">Authorised Signatory</div>
+            <div class="df-sig-co" id="sigCo"></div>
+          </div>
+        </div>
+        <div class="doc-footer-accent"></div>
+
+      </div><!-- /doc -->
+    </div><!-- /doc-wrap -->
+  </div><!-- /page-wrap -->
 </div><!-- /app -->
 
 <script src="script.js"></script>

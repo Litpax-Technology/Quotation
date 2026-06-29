@@ -3,7 +3,7 @@
 // ══════════════════════════════════════════════════════
 
 // 🔴 Apna GAS deployed URL yahan daalo
-const GAS_URL = 'YOUR_GAS_DEPLOYED_URL_HERE';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxV1VaKAuoJc0Jpgb1fPbj6ICJ6Qqn8d1i2v5JDvdT3Z-VoDawl3-Kd6ORbk0A6h9OwyQ/exec';
 
 // ── STATE ─────────────────────────────────────────────
 let productsData = []; // raw array from sheet

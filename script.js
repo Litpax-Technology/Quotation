@@ -4,7 +4,7 @@
 // ══════════════════════════════════════════════
 
 // 🔴 Apna GAS URL yahan daalo
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbxn-xUtBNMMqZ5ws4tesaxkL-1FCxiXVDIhVfrqXdRWoz8jaj-1RdDR7I4jWRz9rKfb4w/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzC22tYgOB_XORHGydqBE1fLV0ptLjPCVZ8YdxA1GQU6bD8fS6ICmQuzBz0rc9YLSoj5g/exec';
 
 const BATT_GST = 18;
 const CHAR_GST = 5;
